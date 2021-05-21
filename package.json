@@ -2,7 +2,12 @@
   "name": "s3-dir-sync",
   "version": "0.1.0",
   "description": "command line utility to synchronize from a local directory to s3 bucket",
-  "main": "index.js",
+  "files": [
+    "bin"
+  ],
+  "bin": {
+    "s3-dir-sync": ".bin/index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/earlycross-inc/s3-dir-sync.git"
@@ -14,8 +19,11 @@
   "homepage": "https://github.com/earlycross-inc/s3-dir-sync#readme",
   "scripts": {
     "lint:eslint": "eslint --fix --ext .tsx --ext .ts src/",
-    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,scss}",
-    "lint": "tsc --noEmit && yarn lint:eslint && yarn format"
+    "format": "prettier --write src/**/*.{js,ts}",
+    "lint": "tsc --noEmit && yarn lint:eslint && yarn format",
+    "start": "ts-node src/Upload.ts --config=test",
+    "build": "tsc",
+    "prepare": "npm run build"
   },
   "dependencies": {
     "@types/argv": "^0.0.4",
