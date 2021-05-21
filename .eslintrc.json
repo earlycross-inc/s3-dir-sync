@@ -1,0 +1,13 @@
+{
+  "extends": ["earlycross-typescript", "prettier"],
+  "parserOptions": {
+    "project": ["./tsconfig.json", "bin/tsconfig.json"]
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".ts"]
+      }
+    }
+  }
+}

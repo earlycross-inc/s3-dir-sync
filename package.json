@@ -13,7 +13,9 @@
   },
   "homepage": "https://github.com/earlycross-inc/s3-dir-sync#readme",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint:eslint": "eslint --fix --ext .tsx --ext .ts src/",
+    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,scss}",
+    "lint": "tsc --noEmit && yarn lint:eslint && yarn format"
   },
   "dependencies": {
     "@types/argv": "^0.0.4",
@@ -25,7 +27,10 @@
     "fs-extra": "^10.0.0"
   },
   "devDependencies": {
+    "eslint": "^7.26.0",
     "eslint-config-earlycross-typescript": "^0.2.3",
+    "eslint-config-prettier": "^8.3.0",
+    "prettier": "^2.3.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.4"
   }
