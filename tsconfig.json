@@ -10,7 +10,7 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "outDir": "bin",
+    "outDir": "dist",
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
