@@ -9,7 +9,7 @@ import { UploadConfig } from './UploadConfig';
  * @param localDir local directory to synchronize
  */
 export const upload = async (configPath: string, localDir: string): Promise<void> => {
-  if (fs.existsSync(configPath)) {
+  if (!fs.existsSync(configPath)) {
     console.error(`Config file: ${configPath} does not exist.`);
     return;
   }
