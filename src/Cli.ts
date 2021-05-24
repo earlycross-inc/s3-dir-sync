@@ -1,4 +1,6 @@
+import path from 'path';
 import yargs from 'yargs';
+import AppRootPath from 'app-root-path';
 import { upload } from './Upload';
 
 export const cli = async (): Promise<void> => {
@@ -19,5 +21,7 @@ export const cli = async (): Promise<void> => {
     })
     .help().argv;
 
-  await upload(argv.config, argv.dir);
+  const configFullPath = path.join(AppRootPath.path, argv.config);
+  const dirFullPath = path.join(AppRootPath.path, argv.dir);
+  await upload(configFullPath, dirFullPath);
 };
