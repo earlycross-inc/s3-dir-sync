@@ -1,18 +1,23 @@
-import argv from 'argv';
+import yargs from 'yargs';
 import { upload } from './Upload';
 
-export const cli = (): void => {
-  argv.option({
-    name: 'config',
-    short: 'c',
-    type: 'string'
-  });
-  argv.option({
-    name: 'dir',
-    short: 'd',
-    type: 'string'
-  });
-  const args = argv.run();
+export const cli = async (): Promise<void> => {
+  const argv = await yargs
+    .options({
+      config: {
+        alias: 'c',
+        type: 'string',
+        description: 'path of the config file to upload',
+        demandOption: true
+      },
+      dir: {
+        alias: 'd',
+        type: 'string',
+        description: 'path of the directory to synchronize',
+        demandOption: true
+      }
+    })
+    .help().argv;
 
-  upload(args.options.config, args.options.dir).catch(e => console.error(e));
+  await upload(argv.config, argv.dir);
 };
