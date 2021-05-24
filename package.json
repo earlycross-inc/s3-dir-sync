@@ -4,7 +4,7 @@
   "description": "command line utility to synchronize from a local directory to s3 bucket",
   "files": [
     "bin",
-    "dist"
+    "lib"
   ],
   "bin": {
     "s3-dir-sync": ".bin/index.js"
