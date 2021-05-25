@@ -1,7 +1,7 @@
 import AWS from 'aws-sdk';
 import fs from 'fs-extra';
 import { syncDirectoryWithS3 } from './Sync';
-import { UploadConfig } from './UploadConfig';
+import { isUploadConfig } from './UploadConfig';
 
 /**
  * Upload to s3
@@ -25,12 +25,3 @@ export const upload = async (configPath: string, localDir: string): Promise<void
 
   return syncDirectoryWithS3(s3, conf, localDir);
 };
-
-const isUploadConfig = (arg: any): arg is UploadConfig =>
-  arg !== null &&
-  typeof arg === 'object' &&
-  typeof arg.accessKeyId === 'string' &&
-  typeof arg.secretAccessKey === 'string' &&
-  typeof arg.bucket === 'string' &&
-  typeof arg.prefix === 'string' &&
-  (typeof arg.cloudFrontId === 'string' || arg.cloudFrontId === 'undefined');
