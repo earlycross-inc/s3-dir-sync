@@ -5,10 +5,10 @@ import { isUploadConfig } from './UploadConfig';
 
 /**
  * Upload to s3
- * @param config config file path
- * @param localDir local directory to synchronize
+ * @param configPath the path of config file
+ * @param localDirPath the path of local directory to synchronize
  */
-export const upload = async (configPath: string, localDir: string): Promise<void> => {
+export const upload = async (configPath: string, localDirPath: string): Promise<void> => {
   if (!fs.existsSync(configPath)) {
     console.error(`Config file: ${configPath} does not exist.`);
     return;
@@ -23,5 +23,5 @@ export const upload = async (configPath: string, localDir: string): Promise<void
   const cred = new AWS.Credentials({ accessKeyId: conf.accessKeyId, secretAccessKey: conf.secretAccessKey });
   const s3 = new AWS.S3({ credentials: cred });
 
-  return syncDirectoryWithS3(s3, conf, localDir);
+  return syncDirectoryWithS3(s3, conf, localDirPath);
 };
