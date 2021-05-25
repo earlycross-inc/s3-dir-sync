@@ -27,7 +27,7 @@ export const syncDirectoryWithS3 = async (s3: S3, { bucket, prefix }: UploadConf
   console.log('extracting updated & deleted files in local');
   const uploads = [];
   for (const localFile of localFiles) {
-    const key = path.relative(dirPath, localFile);
+    const key = path.relative(dirPath, localFile).replace(/\\/g, '/');
     const s3ObjState = s3ObjProcStateMap.get(key);
 
     if (s3ObjState !== undefined) {
