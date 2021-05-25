@@ -5,7 +5,11 @@ import md5 from 'md5';
 import mime from 'mime';
 import { UploadConfig } from './UploadConfig';
 
-export const syncDirectoryWithS3 = async (s3: S3, { bucket, prefix }: UploadConfig, dirPath: string): Promise<void> => {
+export const syncDirectoryWithS3 = async (
+  s3: S3,
+  { bucket, prefix = '' }: UploadConfig,
+  dirPath: string
+): Promise<void> => {
   console.log(`sync ${dirPath} to s3://${path.join(bucket, prefix)}`);
   console.log('traversing local & S3 files');
   const localFiles = listFilesInLocalDir(dirPath);
