@@ -3,14 +3,18 @@ import { AWSError, S3 } from 'aws-sdk';
 import fs from 'fs-extra';
 import md5 from 'md5';
 import mime from 'mime';
-import { UploadConfig } from './UploadConfig';
+import minimatch from 'minimatch';
+import { SyncConfig } from './Config';
 
 export const syncDirectoryWithS3 = async (
   s3: S3,
-  { bucket, prefix = '' }: UploadConfig,
+  { bucket, prefix = '', excludePaths }: SyncConfig,
   dirPath: string
 ): Promise<void> => {
   console.log(`sync ${dirPath} to s3://${path.join(bucket, prefix)}`);
+  if (excludePaths !== undefined) {
+    console.log(`paths to be excluded:`, excludePaths);
+  }
   console.log('traversing local & S3 files');
   const localFiles = listFilesInLocalDir(dirPath);
   const s3ObjInfos = await listS3Objects(s3, bucket, prefix);
@@ -19,19 +23,27 @@ export const syncDirectoryWithS3 = async (
     obj: S3.Object;
     matched: boolean;
   }
-  const s3ObjProcStateMap = new Map(
-    s3ObjInfos
-      .filter(obj => obj.Key !== undefined && obj.Key !== prefix)
-      .map<[string, S3ObjProcState]>(obj => [
-        (obj.Key as string).replace(prefix, ''), // Make it a "relative key" based on the prefix.
-        { obj, matched: false }
-      ])
-  );
+  let s3ObjPairs = s3ObjInfos
+    .filter(obj => obj.Key !== undefined && obj.Key !== prefix)
+    .map<[string, S3ObjProcState]>(obj => [
+      (obj.Key as string).replace(prefix, ''), // Make it a "relative key" based on the prefix.
+      { obj, matched: false }
+    ]);
+  if (excludePaths !== undefined) {
+    // Exclude pairs that match any of the patterns in excludePaths.
+    s3ObjPairs = s3ObjPairs.filter(pair => !excludePaths.some(excl => minimatch(pair[0], excl)));
+  }
+
+  const s3ObjProcStateMap = new Map(s3ObjPairs);
 
   console.log('extracting updated & deleted files in local');
   const uploads = [];
   for (const localFile of localFiles) {
     const key = path.relative(dirPath, localFile).replace(/\\/g, '/');
+    // If any of the patterns in excludePaths match, skip them.
+    if (excludePaths !== undefined && excludePaths.some(excl => minimatch(key, excl))) {
+      continue;
+    }
     const s3ObjState = s3ObjProcStateMap.get(key);
 
     if (s3ObjState !== undefined) {
