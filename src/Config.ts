@@ -15,12 +15,17 @@ export interface SyncConfig {
   cloudFrontId?: string;
 }
 
-export const isUploadConfig = (arg: any): arg is UploadConfig =>
-  arg !== null &&
-  typeof arg === 'object' &&
-  typeof arg.aws.accessKeyId === 'string' &&
-  typeof arg.aws.secretAccessKey === 'string' &&
-  typeof arg.sync.bucket === 'string' &&
-  (typeof arg.sync.prefix === 'string' || typeof arg.prefix === 'undefined') &&
-  (Array.isArray(arg.excludePaths) || typeof arg.excludePaths === 'undefined') &&
-  (typeof arg.sync.cloudFrontId === 'string' || typeof arg.cloudFrontId === 'undefined');
+export const isUploadConfig = (arg: unknown): arg is UploadConfig => {
+  const uploadConfigArg = arg as UploadConfig;
+  return (
+    uploadConfigArg &&
+    uploadConfigArg.aws &&
+    uploadConfigArg.sync &&
+    typeof uploadConfigArg.aws.accessKeyId === 'string' &&
+    typeof uploadConfigArg.aws.secretAccessKey === 'string' &&
+    typeof uploadConfigArg.sync.bucket === 'string' &&
+    (typeof uploadConfigArg.sync.prefix === 'string' || typeof uploadConfigArg.sync.prefix === 'undefined') &&
+    (Array.isArray(uploadConfigArg.sync.excludePaths) || typeof uploadConfigArg.sync.excludePaths === 'undefined') &&
+    (typeof uploadConfigArg.sync.cloudFrontId === 'string' || typeof uploadConfigArg.sync.cloudFrontId === 'undefined')
+  );
+};

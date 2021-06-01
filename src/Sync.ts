@@ -49,7 +49,7 @@ export const syncDirectoryWithS3 = async (
     if (s3ObjState !== undefined) {
       if (s3ObjState.obj.ETag !== undefined) {
         const localMD5 = md5(fs.readFileSync(localFile));
-        const s3MD5 = JSON.parse(s3ObjState.obj.ETag);
+        const s3MD5 = JSON.parse(s3ObjState.obj.ETag) as string;
         if (localMD5 !== s3MD5) {
           // MD5 of the local file and the file in S3 do not match.
           uploads.push(key);
