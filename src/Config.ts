@@ -12,7 +12,6 @@ export interface SyncConfig {
   bucket: string;
   prefix?: string;
   excludePaths?: string[]; // paths to be excluded, in glob pattern
-  cloudFrontId?: string;
 }
 
 export const isUploadConfig = (arg: unknown): arg is UploadConfig => {
@@ -25,7 +24,6 @@ export const isUploadConfig = (arg: unknown): arg is UploadConfig => {
     typeof uploadConfigArg.aws.secretAccessKey === 'string' &&
     typeof uploadConfigArg.sync.bucket === 'string' &&
     (typeof uploadConfigArg.sync.prefix === 'string' || typeof uploadConfigArg.sync.prefix === 'undefined') &&
-    (Array.isArray(uploadConfigArg.sync.excludePaths) || typeof uploadConfigArg.sync.excludePaths === 'undefined') &&
-    (typeof uploadConfigArg.sync.cloudFrontId === 'string' || typeof uploadConfigArg.sync.cloudFrontId === 'undefined')
+    (Array.isArray(uploadConfigArg.sync.excludePaths) || typeof uploadConfigArg.sync.excludePaths === 'undefined')
   );
 };
