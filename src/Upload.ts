@@ -5,8 +5,8 @@ import { isUploadConfig, UploadConfig } from './Config';
 
 /**
  * Upload to s3
- * @param configPath the path of config file
- * @param localDirPath the path of local directory to synchronize
+ * @param configPath the path to config file
+ * @param localDirPath the path to local directory to synchronize
  */
 export const upload = async (configPath: string, localDirPath: string): Promise<void> => {
   if (!fs.existsSync(configPath)) {
