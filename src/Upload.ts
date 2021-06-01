@@ -1,7 +1,7 @@
 import AWS from 'aws-sdk';
 import fs from 'fs-extra';
 import { syncDirectoryWithS3 } from './Sync';
-import { isUploadConfig } from './Config';
+import { isUploadConfig, UploadConfig } from './Config';
 
 /**
  * Upload to s3
@@ -14,9 +14,9 @@ export const upload = async (configPath: string, localDirPath: string): Promise<
     return;
   }
 
-  const conf = require(configPath);
+  const conf = (await import(configPath)) as UploadConfig;
   if (!isUploadConfig(conf)) {
-    console.error(`conf of type is not assignable to parameter of type 'UploadConfig'.`);
+    console.error(`Type of conf is not 'UploadConfig'.`);
     return;
   }
   const cred = new AWS.Credentials(conf.aws);
