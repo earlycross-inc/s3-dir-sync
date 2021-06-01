@@ -9,13 +9,13 @@ export const cli = async (): Promise<void> => {
       config: {
         alias: 'c',
         type: 'string',
-        description: 'path of the config file to upload',
+        description: 'path to the config file to upload',
         demandOption: true
       },
       dir: {
         alias: 'd',
         type: 'string',
-        description: 'path of the directory to synchronize',
+        description: 'path to the directory to synchronize',
         demandOption: true
       }
     })
