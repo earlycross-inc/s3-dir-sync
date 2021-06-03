@@ -6,6 +6,13 @@ import mime from 'mime';
 import minimatch from 'minimatch';
 import { SyncConfig } from './Config';
 
+/**
+ * Synchronize from a local directory to S3 bucket
+ * @param s3 S3 instance
+ * @param param1 object for bucket name and directory prefix, paths not to be synchronized
+ * @param dirPath the path to local directory to synchronize
+ * @returns promise that returns no value
+ */
 export const syncDirectoryWithS3 = async (
   s3: S3,
   { bucket, prefix = '', excludePaths }: SyncConfig,
@@ -103,6 +110,12 @@ interface UploadError {
   msg: string;
 }
 
+/**
+ * Upload file to S3
+ * @param s3 S3 instance
+ * @param params request parameters for uploading a file to S3
+ * @returns promise that returns S3.PutObjectOutput
+ */
 const putObjectPromise = async (s3: S3, params: S3.PutObjectRequest): Promise<S3.PutObjectOutput> =>
   new Promise((resolve, reject) => {
     s3.putObject(params, (err, data) => {
@@ -114,6 +127,12 @@ const putObjectPromise = async (s3: S3, params: S3.PutObjectRequest): Promise<S3
     });
   });
 
+/**
+ * Delete object from S3
+ * @param s3 S3 instance
+ * @param params request parameters to delete an object from S3
+ * @returns promise that returns S3.DeleteObjectOutput
+ */
 const deleteObjectsPromise = async (s3: S3, params: S3.DeleteObjectsRequest): Promise<S3.DeleteObjectOutput> =>
   new Promise((resolve, reject) => {
     s3.deleteObjects(params, (err, data) => {
@@ -125,6 +144,14 @@ const deleteObjectsPromise = async (s3: S3, params: S3.DeleteObjectsRequest): Pr
     });
   });
 
+/**
+ * Load the file and then upload it
+ * @param s3 S3 instance
+ * @param bucket bucket name
+ * @param localPath path of the local directory
+ * @param s3Key key of S3 object
+ * @returns promise that returns upload errors or undefined
+ */
 const uploadToS3 = async (
   s3: S3,
   bucket: string,
@@ -155,6 +182,13 @@ const uploadToS3 = async (
   return undefined;
 };
 
+/**
+ * Delete objects from S3
+ * @param s3 S3 instance
+ * @param bucket bucket name
+ * @param s3Keys keys of S3 object
+ * @returns promise that returns upload errors or undefined
+ */
 const batchDeleteFromS3 = async (s3: S3, bucket: string, s3Keys: string[]): Promise<UploadError[] | undefined> => {
   const req: S3.DeleteObjectsRequest = {
     Bucket: bucket,
@@ -187,6 +221,13 @@ const batchDeleteFromS3 = async (s3: S3, bucket: string, s3Keys: string[]): Prom
   });
 };
 
+/**
+ * List the infomation of the objects in S3
+ * @param s3 S3 instance
+ * @param bucket bucket name
+ * @param prefix prefix of the target directory
+ * @returns promise that returns the infomation of the objects in S3
+ */
 const listS3Objects = async (s3: S3, bucket: string, prefix: string): Promise<S3.ObjectList> => {
   const p = new Promise<S3.ObjectList>((resolve, reject) => {
     s3.listObjects({ Bucket: bucket, Prefix: prefix }, (err, data) => {
@@ -204,6 +245,11 @@ const listS3Objects = async (s3: S3, bucket: string, prefix: string): Promise<S3
   return p;
 };
 
+/**
+ * List the relative paths of files to synchronize
+ * @param rootPath path of the root directory
+ * @returns list of relative paths of files to synchronize
+ */
 const listFilesInLocalDir = (rootPath: string): string[] => {
   const res: string[] = [];
 
@@ -223,7 +269,16 @@ const listFilesInLocalDir = (rootPath: string): string[] => {
   return res;
 };
 
+/**
+ * maximum number of files to be deleted at once
+ */
 const maxKeyNumInBatch = 1000;
+
+/**
+ * Divide the S3 object keys by the number that can be deleted at once
+ * @param keys keys of S3 object
+ * @returns two-dimensional array of keys divided by a specified number
+ */
 const makeKeyBatches = (keys: string[]): string[][] => {
   const res: string[][] = [];
   for (let i = 0; i < Math.ceil(keys.length / maxKeyNumInBatch); i++) {
