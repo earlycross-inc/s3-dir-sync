@@ -7,12 +7,26 @@ import minimatch from 'minimatch';
 import { SyncConfig } from './Config';
 
 interface UploadError {
+  /**
+   * S3 object key
+   */
   key: string;
+
+  /**
+   * error message
+   */
   msg: string;
 }
 
 interface S3ObjProcState {
+  /**
+   * S3 object
+   */
   obj: S3.Object;
+
+  /**
+   * flag whether a file with the same content exists locally
+   */
   matched: boolean;
 }
 
