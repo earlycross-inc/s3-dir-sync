@@ -10,14 +10,12 @@ import { isUploadConfig, UploadConfig } from './Config';
  */
 export const upload = async (configPath: string, localDirPath: string): Promise<void> => {
   if (!fs.existsSync(configPath)) {
-    console.error(`Config file: ${configPath} does not exist.`);
-    return;
+    throw new Error(`Config file: ${configPath} does not exist.`);
   }
 
   const conf = (await import(configPath)) as UploadConfig;
   if (!isUploadConfig(conf)) {
-    console.error(`Type of conf is not 'UploadConfig'.`);
-    return;
+    throw new Error(`Type of conf is not 'UploadConfig'.`);
   }
   const cred = new AWS.Credentials(conf.aws);
   const s3 = new AWS.S3({ credentials: cred });

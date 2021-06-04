@@ -3,4 +3,7 @@
 
 require('../lib/Cli')
   .cli()
-  .catch(e => console.error(e));
+  .catch(e => {
+    console.error(e);
+    process.exit(1);
+  });

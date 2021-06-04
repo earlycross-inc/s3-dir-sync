@@ -98,9 +98,10 @@ export const syncDirectoryWithS3 = async (
   const errors = (await Promise.all(syncOps)).filter((err): err is Exclude<typeof err, undefined> => err !== undefined);
   if (errors.length > 0) {
     const flatErrors = errors.flat();
-    console.error(`${flatErrors.length} error(s)`);
-    flatErrors.forEach(err => console.error(`${err.key}: ${err.msg}`));
-    return;
+    const headerErrorMsg = `${flatErrors.length} error(s)`;
+    const flatErrorMsg = flatErrors.map(err => `${err.key}: ${err.msg}`).join('\n');
+    const syncErrorMsg = `${headerErrorMsg}\n${flatErrorMsg}`;
+    throw new Error(syncErrorMsg);
   }
   console.log('finished!');
 };
