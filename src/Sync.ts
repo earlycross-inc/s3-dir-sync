@@ -6,6 +6,16 @@ import mime from 'mime';
 import minimatch from 'minimatch';
 import { SyncConfig } from './Config';
 
+interface UploadError {
+  key: string;
+  msg: string;
+}
+
+interface S3ObjProcState {
+  obj: S3.Object;
+  matched: boolean;
+}
+
 /**
  * Synchronize from a local directory to S3 bucket
  * @param s3 S3 instance
@@ -26,10 +36,6 @@ export const syncDirectoryWithS3 = async (
   const localFiles = listFilesInLocalDir(dirPath);
   const s3ObjInfos = await listS3Objects(s3, bucket, prefix);
 
-  interface S3ObjProcState {
-    obj: S3.Object;
-    matched: boolean;
-  }
   let s3ObjPairs = s3ObjInfos
     .filter(obj => obj.Key !== undefined && obj.Key !== prefix)
     .map<[string, S3ObjProcState]>(obj => [
@@ -105,11 +111,6 @@ export const syncDirectoryWithS3 = async (
   }
   console.log('finished!');
 };
-
-interface UploadError {
-  key: string;
-  msg: string;
-}
 
 /**
  * Upload file to S3
