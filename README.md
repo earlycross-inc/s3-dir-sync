@@ -11,7 +11,7 @@ Command line utility to synchronize from a local directory to s3 bucket with [aw
 
 ## Install
 
-npm install --save-div @earlycross/s3-dir-sync
+npm install --save-dev @earlycross-inc/s3-dir-sync
 
 ## Configuration
 
