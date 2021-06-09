@@ -18,6 +18,13 @@
     "url": "https://github.com/earlycross-inc/s3-dir-sync/issues"
   },
   "homepage": "https://github.com/earlycross-inc/s3-dir-sync#readme",
+  "keywords": [
+    "amazon",
+    "aws",
+    "s3",
+    "sync",
+    "directory"
+  ],
   "scripts": {
     "lint:eslint": "eslint --fix --ext .tsx --ext .ts src/",
     "format": "prettier --write src/**/*.{js,ts}",
