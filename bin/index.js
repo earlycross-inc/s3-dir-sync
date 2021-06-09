@@ -1,4 +1,9 @@
 #!/usr/bin/env node
 'use strict';
 
-console.log('Hello World');
+require('../lib/Cli')
+  .cli()
+  .catch(e => {
+    console.error(e);
+    process.exit(1);
+  });
