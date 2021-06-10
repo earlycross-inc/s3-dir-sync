@@ -10,7 +10,7 @@
     "lib"
   ],
   "bin": {
-    "s3-dir-sync": ".bin/index.js"
+    "s3-dir-sync": "./bin/index.js"
   },
   "repository": {
     "type": "git",
