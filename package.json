@@ -1,6 +1,6 @@
 {
   "name": "@earlycross-inc/s3-dir-sync",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "command line utility to synchronize from a local directory to s3 bucket",
   "files": [
     "README.md",
