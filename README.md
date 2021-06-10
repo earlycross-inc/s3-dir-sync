@@ -1,6 +1,6 @@
 # s3-dir-sync
 
-Command line utility to synchronize from a local directory to s3 bucket with [aws-sdk](https://www.npmjs.com/package/aws-sdk) instead of [s3](https://www.npmjs.com/package/s3).
+Command line utility to synchronize from a local directory to s3 bucket with [aws-sdk](https://www.npmjs.com/package/aws-sdk).
 
 ## Features
 
