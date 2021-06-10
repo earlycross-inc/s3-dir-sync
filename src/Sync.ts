@@ -42,12 +42,14 @@ export const syncDirectoryWithS3 = async (
   { bucket, prefix = '', excludePaths }: SyncConfig,
   dirPath: string
 ): Promise<void> => {
-  console.log(`sync ${dirPath} to s3://${path.join(bucket, prefix)}`);
+  const posixDirPath = pathWinToPosix(dirPath);
+
+  console.log(`sync ${posixDirPath} to s3://${path.posix.join(bucket, prefix)}`);
   if (excludePaths !== undefined) {
     console.log(`paths to be excluded:`, excludePaths);
   }
   console.log('traversing local & S3 files');
-  const localFiles = listFilesInLocalDir(dirPath);
+  const localFiles = listFilesInLocalDir(posixDirPath);
   const s3ObjInfos = await listS3Objects(s3, bucket, prefix);
 
   let s3ObjPairs = s3ObjInfos
@@ -64,9 +66,9 @@ export const syncDirectoryWithS3 = async (
   const s3ObjProcStateMap = new Map(s3ObjPairs);
 
   console.log('extracting updated & deleted files in local');
-  const uploads = [];
+  const uploads: string[] = [];
   for (const localFile of localFiles) {
-    const key = path.relative(dirPath, localFile).replace(/\\/g, '/');
+    const key = path.posix.relative(posixDirPath, localFile);
     // If any of the patterns in excludePaths match, skip them.
     if (excludePaths !== undefined && excludePaths.some(excl => minimatch(key, excl))) {
       continue;
@@ -105,12 +107,14 @@ export const syncDirectoryWithS3 = async (
   console.log('uploading & deleting files...');
   const deleteBatches = makeKeyBatches(deletes);
   const syncOps = [
-    ...uploads.map(async key => uploadToS3(s3, bucket, path.join(dirPath, key), path.join(prefix, key))),
+    ...uploads.map(async key =>
+      uploadToS3(s3, bucket, path.posix.join(posixDirPath, key), path.posix.join(prefix, key))
+    ),
     ...deleteBatches.map(async keys =>
       batchDeleteFromS3(
         s3,
         bucket,
-        keys.map(key => path.join(prefix, key))
+        keys.map(key => path.posix.join(prefix, key))
       )
     )
   ];
@@ -271,7 +275,7 @@ const listFilesInLocalDir = (rootPath: string): string[] => {
 
   const walk = (dirPath: string): void => {
     for (const fname of fs.readdirSync(dirPath)) {
-      const fpath = path.join(dirPath, fname);
+      const fpath = path.posix.join(dirPath, fname);
       const fstat = fs.statSync(fpath);
 
       if (fstat.isDirectory()) {
@@ -302,3 +306,10 @@ const makeKeyBatches = (keys: string[]): string[][] => {
   }
   return res;
 };
+
+/**
+ * Convert path format from windows to posix
+ * @param winPath path format of windows
+ * @returns path format of posix
+ */
+const pathWinToPosix = (winPath: string): string => winPath.replace(/\\/g, '/');
