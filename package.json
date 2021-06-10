@@ -3,6 +3,9 @@
   "version": "1.0.1",
   "description": "command line utility to synchronize from a local directory to s3 bucket",
   "files": [
+    "README.md",
+    "package.json",
+    "LICENSE",
     "bin",
     "lib"
   ],
@@ -31,8 +34,7 @@
     "lint": "tsc --noEmit && npm run lint:eslint && npm run format",
     "start": "node ./bin/index.js --config=./test/upload.config.test.json --dir=./dist",
     "build": "rimraf lib && tsc",
-    "bs": "npm run build && npm run start",
-    "prepare": "npm run build"
+    "bs": "npm run build && npm run start"
   },
   "dependencies": {
     "app-root-path": "^3.0.0",
