@@ -1,6 +1,6 @@
 {
   "name": "s3-dir-sync",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "command line utility to synchronize from a local directory to s3 bucket",
   "files": [
     "README.md",
